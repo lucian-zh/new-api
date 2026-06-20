@@ -162,6 +162,9 @@ type RelayInfo struct {
 	UpstreamRequestBodySize int64
 
 	PriceData types.PriceData
+	// BillingModelName is the model name used for pricing. Empty means
+	// OriginModelName for backward-compatible paths with no model mapping.
+	BillingModelName string
 
 	// TieredBillingSnapshot is a frozen snapshot of tiered billing rules
 	// captured at pre-consume time. Non-nil only when billing mode is "tiered_expr".
@@ -654,6 +657,16 @@ func (info *RelayInfo) SetEstimatePromptTokens(promptTokens int) {
 
 func (info *RelayInfo) GetEstimatePromptTokens() int {
 	return info.estimatePromptTokens
+}
+
+func (info *RelayInfo) GetBillingModelName() string {
+	if info == nil {
+		return ""
+	}
+	if info.BillingModelName != "" {
+		return info.BillingModelName
+	}
+	return info.OriginModelName
 }
 
 func (info *RelayInfo) SetFirstResponseTime() {

@@ -170,6 +170,7 @@ func RelayTaskSubmit(c *gin.Context, info *relaycommon.RelayInfo) (*TaskSubmitRe
 	if err := helper.ModelMappedHelper(c, info, nil); err != nil {
 		return nil, service.TaskErrorWrapperLocal(err, "model_mapping_failed", http.StatusBadRequest)
 	}
+	billingModelName := info.GetBillingModelName()
 
 	// 3. 预生成公开 task ID（仅首次）
 	if info.PublicTaskID == "" {
@@ -178,6 +179,7 @@ func RelayTaskSubmit(c *gin.Context, info *relaycommon.RelayInfo) (*TaskSubmitRe
 
 	// 4. 价格计算：基础模型价格
 	info.OriginModelName = modelName
+	info.BillingModelName = billingModelName
 	priceData, err := helper.ModelPriceHelperPerCall(c, info)
 	if err != nil {
 		return nil, service.TaskErrorWrapper(err, "model_price_error", http.StatusBadRequest)
@@ -194,7 +196,7 @@ func RelayTaskSubmit(c *gin.Context, info *relaycommon.RelayInfo) (*TaskSubmitRe
 	}
 
 	// 6. 将 OtherRatios 应用到基础额度
-	if !common.StringsContains(constant.TaskPricePatches, modelName) {
+	if !common.StringsContains(constant.TaskPricePatches, info.GetBillingModelName()) {
 		for _, ra := range info.PriceData.OtherRatios {
 			if ra != 1.0 {
 				info.PriceData.Quota = int(float64(info.PriceData.Quota) * ra)

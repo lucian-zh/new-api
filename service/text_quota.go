@@ -158,7 +158,7 @@ func composeTieredTextQuota(relayInfo *relaycommon.RelayInfo, summary textQuotaS
 
 func calculateTextQuotaSummary(ctx *gin.Context, relayInfo *relaycommon.RelayInfo, usage *dto.Usage) textQuotaSummary {
 	summary := textQuotaSummary{
-		ModelName:            relayInfo.OriginModelName,
+		ModelName:            relayInfo.GetBillingModelName(),
 		TokenName:            ctx.GetString("token_name"),
 		UseTimeSeconds:       time.Now().Unix() - relayInfo.StartTime.Unix(),
 		CompletionRatio:      relayInfo.PriceData.CompletionRatio,
@@ -457,6 +457,10 @@ func PostTextConsumeQuota(ctx *gin.Context, relayInfo *relaycommon.RelayInfo, us
 	}
 	if tieredBillingApplied {
 		InjectTieredBillingInfo(other, relayInfo, tieredResult)
+	}
+	if relayInfo.OriginModelName != "" && relayInfo.OriginModelName != summary.ModelName {
+		other["request_model_name"] = relayInfo.OriginModelName
+		other["billing_model_name"] = summary.ModelName
 	}
 
 	model.RecordConsumeLog(ctx, relayInfo.UserId, model.RecordConsumeLogParams{

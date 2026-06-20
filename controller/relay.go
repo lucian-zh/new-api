@@ -142,6 +142,11 @@ func Relay(c *gin.Context, relayFormat types.RelayFormat) {
 		}
 	}
 
+	if err := helper.PrepareBillingModel(c, relayInfo); err != nil {
+		newAPIError = types.NewError(err, types.ErrorCodeChannelModelMappedError, types.ErrOptionWithSkipRetry(), types.ErrOptionWithStatusCode(http.StatusBadRequest))
+		return
+	}
+
 	tokens, err := service.EstimateRequestToken(c, meta, relayInfo)
 	if err != nil {
 		newAPIError = types.NewError(err, types.ErrorCodeCountTokenFailed)
@@ -588,8 +593,8 @@ func RelayTask(c *gin.Context) {
 			GroupRatio:      relayInfo.PriceData.GroupRatioInfo.GroupRatio,
 			ModelRatio:      relayInfo.PriceData.ModelRatio,
 			OtherRatios:     relayInfo.PriceData.OtherRatios,
-			OriginModelName: relayInfo.OriginModelName,
-			PerCallBilling:  common.StringsContains(constant.TaskPricePatches, relayInfo.OriginModelName) || relayInfo.PriceData.UsePrice,
+			OriginModelName: relayInfo.GetBillingModelName(),
+			PerCallBilling:  common.StringsContains(constant.TaskPricePatches, relayInfo.GetBillingModelName()) || relayInfo.PriceData.UsePrice,
 		}
 		task.Quota = result.Quota
 		task.Data = result.TaskData

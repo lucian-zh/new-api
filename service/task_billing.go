@@ -18,9 +18,10 @@ import (
 // 实际扣费已由 BillingSession（PreConsumeBilling + SettleBilling）完成。
 func LogTaskConsumption(c *gin.Context, info *relaycommon.RelayInfo) {
 	tokenName := c.GetString("token_name")
+	billingModelName := info.GetBillingModelName()
 	logContent := fmt.Sprintf("操作 %s", info.Action)
 	// 支持任务仅按次计费
-	if common.StringsContains(constant.TaskPricePatches, info.OriginModelName) {
+	if common.StringsContains(constant.TaskPricePatches, billingModelName) {
 		logContent = fmt.Sprintf("%s，按次计费", logContent)
 	} else {
 		if len(info.PriceData.OtherRatios) > 0 {
@@ -50,9 +51,13 @@ func LogTaskConsumption(c *gin.Context, info *relaycommon.RelayInfo) {
 		other["is_model_mapped"] = true
 		other["upstream_model_name"] = info.UpstreamModelName
 	}
+	if info.OriginModelName != "" && info.OriginModelName != billingModelName {
+		other["request_model_name"] = info.OriginModelName
+		other["billing_model_name"] = billingModelName
+	}
 	model.RecordConsumeLog(c, info.UserId, model.RecordConsumeLogParams{
 		ChannelId: info.ChannelId,
-		ModelName: info.OriginModelName,
+		ModelName: billingModelName,
 		TokenName: tokenName,
 		Quota:     info.PriceData.Quota,
 		Content:   logContent,
