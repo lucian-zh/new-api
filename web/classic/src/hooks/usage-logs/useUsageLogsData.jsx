@@ -450,16 +450,15 @@ export const useLogsData = () => {
       if (logs[i].type === 2) {
         let modelMapped =
           other?.is_model_mapped &&
-          other?.upstream_model_name &&
-          other?.upstream_model_name !== '';
+          (other?.billing_model_name || other?.upstream_model_name);
         if (modelMapped) {
           expandDataLocal.push({
-            key: t('请求并计费模型'),
-            value: logs[i].model_name,
+            key: t('请求模型'),
+            value: other?.request_model_name || logs[i].model_name,
           });
           expandDataLocal.push({
-            key: t('实际模型'),
-            value: other.upstream_model_name,
+            key: t('实际并计费模型'),
+            value: other?.billing_model_name || other.upstream_model_name,
           });
         }
 

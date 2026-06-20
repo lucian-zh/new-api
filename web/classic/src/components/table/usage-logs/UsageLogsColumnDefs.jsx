@@ -271,10 +271,12 @@ function renderBillingTag(record, t) {
 
 function renderModelName(record, copyText, t) {
   let other = getLogOther(record.other);
+  const requestModelName = other?.request_model_name || record.model_name;
+  const billingModelName = other?.billing_model_name || other?.upstream_model_name;
   let modelMapped =
     other?.is_model_mapped &&
-    other?.upstream_model_name &&
-    other?.upstream_model_name !== '';
+    billingModelName &&
+    billingModelName !== '';
   if (!modelMapped) {
     return renderModelTag(record.model_name, {
       onClick: (event) => {
@@ -291,23 +293,21 @@ function renderModelName(record, copyText, t) {
                 <Space vertical align={'start'}>
                   <div className='flex items-center'>
                     <Typography.Text strong style={{ marginRight: 8 }}>
-                      {t('请求并计费模型')}:
+                      {t('请求模型')}:
                     </Typography.Text>
-                    {renderModelTag(record.model_name, {
+                    {renderModelTag(requestModelName, {
                       onClick: (event) => {
-                        copyText(event, record.model_name).then((r) => {});
+                        copyText(event, requestModelName).then((r) => {});
                       },
                     })}
                   </div>
                   <div className='flex items-center'>
                     <Typography.Text strong style={{ marginRight: 8 }}>
-                      {t('实际模型')}:
+                      {t('实际并计费模型')}:
                     </Typography.Text>
-                    {renderModelTag(other.upstream_model_name, {
+                    {renderModelTag(billingModelName, {
                       onClick: (event) => {
-                        copyText(event, other.upstream_model_name).then(
-                          (r) => {},
-                        );
+                        copyText(event, billingModelName).then((r) => {});
                       },
                     })}
                   </div>
@@ -315,9 +315,9 @@ function renderModelName(record, copyText, t) {
               </div>
             }
           >
-            {renderModelTag(record.model_name, {
+            {renderModelTag(requestModelName, {
               onClick: (event) => {
-                copyText(event, record.model_name).then((r) => {});
+                copyText(event, requestModelName).then((r) => {});
               },
               suffixIcon: (
                 <Route

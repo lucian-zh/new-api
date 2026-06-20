@@ -140,6 +140,12 @@ func taskBillingOther(task *model.Task) map[string]interface{} {
 	if props.UpstreamModelName != "" && props.UpstreamModelName != props.OriginModelName {
 		other["is_model_mapped"] = true
 		other["upstream_model_name"] = props.UpstreamModelName
+		if props.OriginModelName != "" {
+			other["request_model_name"] = props.OriginModelName
+		}
+		if billingModelName := taskModelName(task); billingModelName != "" {
+			other["billing_model_name"] = billingModelName
+		}
 	}
 	return other
 }

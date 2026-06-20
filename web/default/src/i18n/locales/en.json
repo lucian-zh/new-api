@@ -138,6 +138,8 @@
     "Active models": "Active models",
     "active users": "active users",
     "Actual Amount": "Actual Amount",
+    "Actual and Billing Model": "Actual and Billing Model",
+    "Actual and Billing Model:": "Actual and Billing Model:",
     "Actual Model": "Actual Model",
     "Actual Model:": "Actual Model:",
     "Adapt `-thinking` suffix requests to Anthropic native thinking behavior while keeping billing predictable.": "Adapt `-thinking` suffix requests to Anthropic native thinking behavior while keeping billing predictable.",

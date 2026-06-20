@@ -410,6 +410,8 @@ export function DetailsDialog(props: DetailsDialogProps) {
   const details = props.log.content ?? ''
   const other = parseLogOther(props.log.other)
   const typeConfig = getLogTypeConfig(props.log.type)
+  const mappedRequestModel = other?.request_model_name || props.log.model_name
+  const mappedBillingModel = other?.billing_model_name || other?.upstream_model_name
 
   const isViolation = isViolationFeeLog(other)
   const isRefund = props.log.type === 6
@@ -933,16 +935,16 @@ export function DetailsDialog(props: DetailsDialogProps) {
         )}
 
         {/* Model mapping */}
-        {other?.is_model_mapped && other?.upstream_model_name && (
+        {other?.is_model_mapped && mappedBillingModel && (
           <DetailSection label={t('Model Mapping')}>
             <DetailRow
               label={t('Request Model')}
-              value={props.log.model_name}
+              value={mappedRequestModel}
               mono
             />
             <DetailRow
-              label={t('Actual Model')}
-              value={other.upstream_model_name}
+              label={t('Actual and Billing Model')}
+              value={mappedBillingModel}
               mono
             />
           </DetailSection>

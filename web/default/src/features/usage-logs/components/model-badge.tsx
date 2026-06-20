@@ -152,7 +152,7 @@ export function ModelBadge(props: ModelBadgeProps) {
           </div>
           <div className='flex items-start justify-between gap-3'>
             <span className='text-muted-foreground text-xs'>
-              {t('Actual Model:')}
+              {t('Actual and Billing Model:')}
             </span>
             <span className='truncate font-mono text-xs font-medium'>
               {props.actualModel}

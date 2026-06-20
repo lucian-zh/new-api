@@ -138,6 +138,8 @@
     "Active models": "Активные модели",
     "active users": "активных пользователей",
     "Actual Amount": "Фактическая сумма",
+    "Actual and Billing Model": "Фактическая и тарифицируемая модель",
+    "Actual and Billing Model:": "Фактическая и тарифицируемая модель:",
     "Actual Model": "Фактическая модель",
     "Actual Model:": "Фактическая модель:",
     "Adapt `-thinking` suffix requests to Anthropic native thinking behavior while keeping billing predictable.": "Адаптировать запросы с суффиксом `-thinking` к собственному режиму размышления Anthropic, сохраняя предсказуемость биллинга.",

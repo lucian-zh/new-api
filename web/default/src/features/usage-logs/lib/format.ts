@@ -160,14 +160,15 @@ export function formatModelName(log: UsageLog): {
   const other = parseLogOther(log.other)
   const isMapped = !!(
     other?.is_model_mapped &&
-    other?.upstream_model_name &&
-    other.upstream_model_name !== ''
+    (other?.billing_model_name || other?.upstream_model_name)
   )
 
   return {
-    name: log.model_name,
+    name: isMapped && other?.request_model_name ? other.request_model_name : log.model_name,
     isMapped,
-    actualModel: isMapped ? other.upstream_model_name : undefined,
+    actualModel: isMapped
+      ? other?.billing_model_name || other?.upstream_model_name
+      : undefined,
   }
 }
 

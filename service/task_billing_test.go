@@ -184,6 +184,20 @@ func countLogs(t *testing.T) int64 {
 	return count
 }
 
+func TestTaskBillingOtherRecordsMappedRequestAndBillingModels(t *testing.T) {
+	task := makeTask(1, 1, 100, 1, BillingSourceWallet, 0)
+	task.Properties.OriginModelName = "claude-sonnet-4.6"
+	task.Properties.UpstreamModelName = "deepseek-v4-pro"
+	task.PrivateData.BillingContext.OriginModelName = "deepseek-v4-pro"
+
+	other := taskBillingOther(task)
+
+	require.Equal(t, true, other["is_model_mapped"])
+	require.Equal(t, "claude-sonnet-4.6", other["request_model_name"])
+	require.Equal(t, "deepseek-v4-pro", other["billing_model_name"])
+	require.Equal(t, "deepseek-v4-pro", other["upstream_model_name"])
+}
+
 // ===========================================================================
 // RefundTaskQuota tests
 // ===========================================================================

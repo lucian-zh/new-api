@@ -138,6 +138,8 @@
     "Active models": "アクティブなモデル",
     "active users": "アクティブユーザー",
     "Actual Amount": "実際の金額",
+    "Actual and Billing Model": "実際および課金モデル",
+    "Actual and Billing Model:": "実際および課金モデル：",
     "Actual Model": "実際のモデル",
     "Actual Model:": "実際のモデル：",
     "Adapt `-thinking` suffix requests to Anthropic native thinking behavior while keeping billing predictable.": "`-thinking` サフィックス付きリクエストを Anthropic ネイティブの思考動作に適配し、課金を予測可能に保ちます。",

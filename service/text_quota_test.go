@@ -439,3 +439,27 @@ func TestComposeTieredTextQuotaErrorFallbackUsesPreConsumedQuota(t *testing.T) {
 	require.Equal(t, int64(12500), summary.ToolCallSurchargeQuota.Round(0).IntPart())
 	require.Equal(t, 14500, quota)
 }
+
+func TestGenerateTextOtherInfoRecordsMappedRequestAndBillingModels(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	w := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(w)
+
+	relayInfo := &relaycommon.RelayInfo{
+		OriginModelName:   "claude-sonnet-4.6",
+		BillingModelName:  "deepseek-v4-pro",
+		StartTime:         time.Now(),
+		FirstResponseTime: time.Now(),
+		ChannelMeta: &relaycommon.ChannelMeta{
+			UpstreamModelName: "deepseek-v4-pro",
+			IsModelMapped:     true,
+		},
+	}
+
+	other := GenerateTextOtherInfo(ctx, relayInfo, 1, 1, 1, 0, 0, 0, 1)
+
+	require.Equal(t, true, other["is_model_mapped"])
+	require.Equal(t, "claude-sonnet-4.6", other["request_model_name"])
+	require.Equal(t, "deepseek-v4-pro", other["billing_model_name"])
+	require.Equal(t, "deepseek-v4-pro", other["upstream_model_name"])
+}
