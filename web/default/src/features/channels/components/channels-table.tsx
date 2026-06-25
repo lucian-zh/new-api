@@ -370,8 +370,10 @@ export function ChannelsTable() {
       skeletonKeyPrefix='channel-skeleton'
       enableCardView
       viewModeStorageKey={CHANNELS_VIEW_MODE_STORAGE_KEY}
-      renderCard={(row) => <ChannelCard row={row} />}
-      cardGridClassName='grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-2 2xl:grid-cols-3'
+      renderCard={(row, { isSelected }) => (
+        <ChannelCard row={row} isSelected={isSelected} />
+      )}
+      cardGridClassName='grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-3'
       applyHeaderSize
       toolbarProps={{
         searchPlaceholder: t('Filter by name, ID, or key...'),
